@@ -23,7 +23,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Qtvhao\\DeviceAccessControl\\Providers\\DeviceAccessControlServiceProvider"
+                "Qtvhao\\DeviceAccessControl\\DeviceAccessControlServiceProvider"
             ]
         }
     }
