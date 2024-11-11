@@ -16,9 +16,10 @@ class CheckExistingDeviceUseCaseTest extends TestCase
     {
         $deviceRepositoryMock = Mockery::mock(DeviceAccessRepositoryInterface::class);
         
-        $existingDevice = new Device();
-        $existingDevice->setDeviceId('abc123');
-        $existingDevice->setDeviceType('Web');
+        $existingDevice = new Device(
+            deviceId: 'abc123',
+            deviceType: 'Web'
+        );
 
         // Assume that the device with ID 'abc123' is already saved
         $deviceRepositoryMock->shouldReceive('findByDeviceId')

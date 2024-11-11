@@ -6,8 +6,13 @@ class Device
     private $deviceId;
     private $deviceType;
 
-    public function __construct()
+    public function __construct(
+        string $deviceId,
+        string $deviceType
+    )
     {
+        $this->deviceId = $deviceId;
+        $this->deviceType = $deviceType;
     }
 
     public function setDeviceId($deviceId)
