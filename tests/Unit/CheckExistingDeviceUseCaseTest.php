@@ -16,10 +16,14 @@ class CheckExistingDeviceUseCaseTest extends TestCase
     {
         $deviceRepositoryMock = Mockery::mock(DeviceAccessRepositoryInterface::class);
         
+        $existingDevice = new Device();
+        $existingDevice->setDeviceId('abc123');
+        $existingDevice->setDeviceType('Web');
+
         // Assume that the device with ID 'abc123' is already saved
         $deviceRepositoryMock->shouldReceive('findByDeviceId')
                              ->with('abc123')
-                             ->andReturn(new Device('abc123', 'Web')); // Giả lập thiết bị được trả về từ repository
+                             ->andReturn($existingDevice); // Giả lập thiết bị được trả về từ repository
 
         // Construct the use case with the mocked repository
         $useCase = new CheckExistingDeviceUseCase($deviceRepositoryMock);
