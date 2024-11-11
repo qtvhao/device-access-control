@@ -16,7 +16,5 @@ class DeviceAccessControlServiceProvider extends ServiceProvider
     }
     public function boot()
     {
-        // Register the migrations
-        $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
     }
 }
