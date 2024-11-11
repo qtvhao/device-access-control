@@ -2,12 +2,12 @@
     "name": "qtvhao/device-access-control",
     "autoload": {
         "psr-4": {
-            "Qtvhao\\DeviceAccessControl\\": "src/"
+            "Qtvhao\\DeviceAccessControl\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Qtvhao\\DeviceAccessControl\\Tests\\": "tests/"
+            "Qtvhao\\DeviceAccessControl\\Tests\\": "tests"
         }
     },
     "authors": [

@@ -1,5 +1,5 @@
 <?php
-namespace Qtvhao\DeviceAccessControl\Providers;
+namespace Qtvhao\DeviceAccessControl;
 
 
 use Illuminate\Support\ServiceProvider;
@@ -18,7 +18,7 @@ class DeviceAccessControlServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishesMigrations([
-            __DIR__.'/../../database/migrations' => database_path('migrations'),
+            __DIR__.'/../database/migrations' => database_path('migrations'),
         ]);
     }
 }
