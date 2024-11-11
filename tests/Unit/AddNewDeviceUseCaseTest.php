@@ -17,18 +17,18 @@ class AddNewDeviceUseCaseTest extends TestCase
             'deviceId' => '123456',
             'deviceType' => 'Web'
         ]);
-        $device = new Device(
-            deviceId: $deviceData->getDeviceId(),
-            deviceType: $deviceData->getDeviceType()
-        );
-        
         $deviceRepositoryMock = $this->createMock(DeviceAccessRepositoryInterface::class);
         $deviceRepositoryMock->expects($this->once())
                              ->method('save')
-                             ->with($device);
+                             ->with($deviceData)
+                                ->willReturn(new Device(
+                                    deviceId: $deviceData->getDeviceId(),
+                                    deviceType: $deviceData->getDeviceType()
+                                ));
 
         $useCase = new AddNewDeviceUseCase($deviceRepositoryMock);
         $saved = $useCase->execute($deviceData);
-        $this->assertEquals($device, $saved);
+        $this->assertEquals($saved->getDeviceType(), 'Web');
+        $this->assertEquals($saved->getDeviceId(), '123456');
     }
 }

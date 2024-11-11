@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Qtvhao\DeviceAccessControl\Core\UseCases\CheckExistingDeviceUseCase;
-use Qtvhao\DeviceAccessControl\Interfaces\DeviceAccessRepositoryInterface;
+use Qtvhao\DeviceAccessControl\Core\Interfaces\DeviceAccessRepositoryInterface;
 use Qtvhao\DeviceAccessControl\Core\Entities\Device;
 
 use Mockery;

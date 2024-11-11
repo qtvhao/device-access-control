@@ -14,14 +14,9 @@ class AddNewDeviceUseCase
         $this->deviceRepository = $deviceRepository;
     }
 
-    public function execute(DeviceData $deviceData)
+    public function execute(DeviceData $deviceData): Device
     {
-        $device = new Device(
-            deviceId: $deviceData->getDeviceId(),
-            deviceType: $deviceData->getDeviceType()
-        );
-
-        $this->deviceRepository->save($device);
+        $device = $this->deviceRepository->save($deviceData);
 
         return $device;
     }
