@@ -13,14 +13,10 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('devices', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->string('id')->primary();
             $table->string('device_id')->unique(); // Unique identifier for each device
             $table->enum('device_type', ['Web', 'Tablet', 'Mobile']);
             $table->timestamps();
-            
-            // Foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
