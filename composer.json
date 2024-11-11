@@ -1,0 +1,15 @@
+{
+    "name": "qtvhao/device-access-control",
+    "autoload": {
+        "psr-4": {
+            "Qtvhao\\DeviceAccessControl\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hao Nghiem",
+            "email": "qtvhao@gmail.com"
+        }
+    ],
+    "require": {}
+}
