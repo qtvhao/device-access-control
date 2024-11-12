@@ -95,12 +95,12 @@ Sử dụng CheckDeviceLimitUseCase để kiểm tra nếu thiết bị mới v�
 - **Use Cases**: Lớp logic nghiệp vụ, bao gồm AddNewDeviceUseCase, CheckExistingDeviceUseCase, và CheckDeviceLimitUseCase.
 - **Caching**: DeviceAccessCacheDecorator để cache dữ liệu truy cập thiết bị.
 
-Testing
+### Testing
 
 1.	Chạy PHPUnit:
-
-    php artisan test
-
+```bash
+php artisan test
+```
 2.	Kiểm tra cụ thể một UseCase:
 Các kiểm thử cho từng use case như AddNewDeviceUseCase và CheckDeviceLimitUseCase đã được cấu hình trong thư mục tests.
 
