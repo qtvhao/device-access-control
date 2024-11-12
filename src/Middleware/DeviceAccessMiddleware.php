@@ -24,6 +24,10 @@ class DeviceAccessMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        if (!$request->user()) {
+            // Return an error if user is not authenticated
+            return new Response('Không có quyền truy cập', Response::HTTP_UNAUTHORIZED);
+        }
         // Get the required headers for device validation
         $deviceId = $request->header('Device-ID');
         $deviceType = $request->header('Device-Type');
