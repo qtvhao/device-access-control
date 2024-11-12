@@ -20,6 +20,6 @@ class DeviceAccessControlServiceProvider extends ServiceProvider
     {
         $this->publishesMigrations([
             __DIR__.'/../database/migrations' => database_path('migrations'),
-        ]);
+        ])->tag(['device-access-control-migrations']);
     }
 }
