@@ -28,6 +28,7 @@ class DeviceAccessMiddlewareTest extends TestCase
         });
 
         $this->assertEquals('Access Granted', $response->getContent());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function test_device_access_denied()
@@ -47,5 +48,6 @@ class DeviceAccessMiddlewareTest extends TestCase
         });
 
         $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals('Vượt quá giới hạn thiết bị truy cập', $response->getContent());
     }
 }
