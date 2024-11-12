@@ -5,6 +5,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Qtvhao\DeviceAccessControl\Core\UseCases\DeviceAccessOrchestrator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class DeviceAccessMiddleware
 {
@@ -24,13 +25,17 @@ class DeviceAccessMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user()) {
-            // Return an error if user is not authenticated
+        if (!$request->bearerToken()) {
+            return new Response('The token could not be parsed from the request', Response::HTTP_BAD_REQUEST);
+        }
+        // Try to get the authenticated user from the token
+        if (!$user = JWTAuth::parseToken()->authenticate()) {
             return new Response('Không có quyền truy cập', Response::HTTP_UNAUTHORIZED);
         }
-        // Get the required headers for device validation
-        $deviceId = $request->header('Device-ID');
-        $deviceType = $request->header('Device-Type');
+
+        // Get the device ID from the JWT payload or request headers
+        $deviceId = $request->header('Device-Id') ?? JWTAuth::getPayload()->get('device_id');
+        $deviceType = $request->header('Device-Type') ?? JWTAuth::getPayload()->get('device_type');
 
         if (!$deviceId || !$deviceType) {
             // Return an error if headers are missing
@@ -38,7 +43,7 @@ class DeviceAccessMiddleware
         }
 
         // Execute device check
-        $userId = $request->user()->id;
+        $userId = $user->id;
         $isAllowed = $this->orchestrator->execute($userId, $deviceId, $deviceType);
 
         if (!$isAllowed) {
