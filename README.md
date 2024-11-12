@@ -18,38 +18,48 @@ Các bước cài đặt
 
 1.	Thêm repository vào composer.json:
 Mở tệp composer.json của dự án và thêm repository:
+
+```json
+{
     "repositories": [
         {
             "type": "vcs",
             "url": "https://github.com/qtvhao/device-access-control"
         }
     ],
-
+}
+```
 
 2.	Thêm package vào phần require:
+```json
+{
     "require": {
         "qtvhao/device-access-control": "dev-main"
     }
-
+}
+```
 3.	Chạy Composer để cài đặt module:
 
+```bash
     composer update
-
+```
 4.	Xuất bản migration:
 Chạy lệnh này để xuất bản các tệp migration cho bảng devices:
 
+```bash
     php artisan vendor:publish --tag=device-access-control-migrations
-
+```
 
 5.	Chạy migration:
 
+```bash
     php artisan migrate
-
+```
 6.	Cấu hình caching:
 Nếu muốn sử dụng caching, hãy đảm bảo đã cấu hình cache driver trong .env, ví dụ:
 
 ```dotenv
-    CACHE_DRIVER=redis
+CACHE_DRIVER=redis
 ```
 
 Cách sử dụng
@@ -77,7 +87,7 @@ Sử dụng CheckExistingDeviceUseCase để kiểm tra thiết bị của ngư�
 Sử dụng CheckDeviceLimitUseCase để kiểm tra nếu thiết bị mới vượt quá giới hạn:
 
 ```php
-$canAddDevice = $checkDeviceLimitUseCase->execute($userId, $deviceType);
+    $canAddDevice = $checkDeviceLimitUseCase->execute($userId, $deviceType);
 ```
 ### Cấu trúc dự án
 - **Device**: Model quản lý thông tin thiết bị (device_id, device_type, user_id).
