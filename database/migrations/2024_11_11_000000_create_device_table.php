@@ -19,9 +19,7 @@ return new class extends Migration {
             $table->enum('device_type', [DeviceEnums::DEVICE_TYPE_WEB, DeviceEnums::DEVICE_TYPE_TABLET, DeviceEnums::DEVICE_TYPE_MOBILE]);
             $table->timestamps();
 
-            // Foreign key to the users table
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            // Khi người dùng xóa tài khoản, thiết bị của họ cũng sẽ bị xóa
+            $table->integer('user_id')->unsigned();
         });
     }
 

@@ -32,6 +32,7 @@ class DeviceAccessControlServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
+        // php artisan vendor:publish --tag=device-access-control-migrations
         // Register middleware
         $router->aliasMiddleware('device.access', DeviceAccessMiddleware::class);
         $this->publishesMigrations([

@@ -17,24 +17,23 @@ class DeviceAccessRepository implements DeviceAccessRepositoryInterface
 
     public function countByDeviceType(string $userId, string $deviceType): int
     {
-        return $this->model->where('device_type', $deviceType)->count();
+        return $this->model
+            ->where('device_type', $deviceType)
+            ->where('user_id', $userId)->count();
     }
 
     public function save(DeviceData $deviceData): Device
     {
-        $device = new Device(
-            deviceId: $deviceData->getDeviceId(),
-            deviceType: $deviceData->getDeviceType()
-        );
-
         $saved = $this->model->newQuery()->create([
-            'device_id' => $device->getDeviceId(),
-            'device_type' => $device->getDeviceType()
+            'device_id' => $deviceData->getDeviceId(),
+            'device_type' => $deviceData->getDeviceType(),
+            'user_id' => $deviceData->getUserId()
         ]);
-
+        // cast the model to the entity
         return new Device(
             deviceId: $saved->device_id,
-            deviceType: $saved->device_type
+            deviceType: $saved->device_type,
+            userId: $saved->user_id
         );
     }
 
@@ -48,7 +47,8 @@ class DeviceAccessRepository implements DeviceAccessRepositoryInterface
 
         return new Device(
             deviceId: $device->device_id,
-            deviceType: $device->device_type
+            deviceType: $device->device_type,
+            userId: $device->user_id
         );
     }
 }
