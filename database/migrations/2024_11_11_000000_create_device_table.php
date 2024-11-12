@@ -14,13 +14,14 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('devices', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->id();
             $table->string('device_id')->unique(); // Unique identifier for each device
             $table->enum('device_type', [DeviceEnums::DEVICE_TYPE_WEB, DeviceEnums::DEVICE_TYPE_TABLET, DeviceEnums::DEVICE_TYPE_MOBILE]);
             $table->timestamps();
 
             // Foreign key to the users table
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            // Khi người dùng xóa tài khoản, thiết bị của họ cũng sẽ bị xóa
         });
     }
 
