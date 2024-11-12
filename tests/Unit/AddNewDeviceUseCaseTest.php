@@ -13,10 +13,11 @@ class AddNewDeviceUseCaseTest extends TestCase
 {
     public function test_add_new_device()
     {
-        $deviceData = new DeviceData([
-            'deviceId' => '123456',
-            'deviceType' => 'Web'
-        ]);
+        $deviceData = new DeviceData(
+            userId: 123,
+            deviceId: '123456',
+            deviceType: 'Web'
+        );
         $deviceRepositoryMock = $this->createMock(DeviceAccessRepositoryInterface::class);
         $deviceRepositoryMock->expects($this->once())
                              ->method('save')

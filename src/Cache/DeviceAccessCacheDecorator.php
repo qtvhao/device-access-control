@@ -19,7 +19,14 @@ class DeviceAccessCacheDecorator implements DeviceAccessRepositoryInterface
 
     public function save(DeviceData $device): Device
     {
-        throw new \Exception("Not implemented. This method should not be called.");
+        $device = $this->repository->save($device);
+
+        $this->cache->set("device:{$device->getDeviceId()}", json_encode([
+            'deviceId' => $device->getDeviceId(),
+            'deviceType' => $device->getDeviceType()
+        ]));
+
+        return $device;
     }
 
     public function findByDeviceId(string $deviceId): ?Device
@@ -40,6 +47,20 @@ class DeviceAccessCacheDecorator implements DeviceAccessRepositoryInterface
         ]));
 
         return $device;
+    }
+
+    public function countByDeviceType(string $userId, string $deviceType): int
+    {
+        $key = "device:$userId:$deviceType";
+        $cachedData = $this->cache->get($key);
+        if ($cachedData) {
+            return (int) $cachedData;
+        }
+
+        $deviceCount = $this->repository->countByDeviceType($userId, $deviceType);
+        $this->cache->set($key, $deviceCount);
+
+        return $deviceCount;
     }
     
 }

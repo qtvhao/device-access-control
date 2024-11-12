@@ -15,6 +15,11 @@ class DeviceAccessRepository implements DeviceAccessRepositoryInterface
         $this->model = $model;
     }
 
+    public function countByDeviceType(string $userId, string $deviceType): int
+    {
+        return $this->model->where('device_type', $deviceType)->count();
+    }
+
     public function save(DeviceData $deviceData): Device
     {
         $device = new Device(
@@ -22,7 +27,7 @@ class DeviceAccessRepository implements DeviceAccessRepositoryInterface
             deviceType: $deviceData->getDeviceType()
         );
 
-        $saved = $this->model->create([
+        $saved = $this->model->newQuery()->create([
             'device_id' => $device->getDeviceId(),
             'device_type' => $device->getDeviceType()
         ]);

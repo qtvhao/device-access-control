@@ -29,10 +29,11 @@ class DeviceAccessRepositoryTest extends TestCase
         $deviceId = 'device123';
 
         // Insert a device directly into the database
-        $this->deviceAccessRepository->save(new DeviceData([
-            'deviceId' => $deviceId,
-            'deviceType' => 'Web',
-        ]));
+        $this->deviceAccessRepository->save(new DeviceData(
+            deviceId: $deviceId,
+            deviceType: 'Web',
+            userId: $user->id
+        ));
 
         $device = $this->deviceAccessRepository->findByDeviceId($deviceId);
 
@@ -43,10 +44,11 @@ class DeviceAccessRepositoryTest extends TestCase
 
     public function test_it_can_save_a_device()
     {
-        $deviceData = new DeviceData([
-            'deviceId' => 'device123',
-            'deviceType' => 'Web',
-        ]);
+        $deviceData = new DeviceData(
+            deviceId: 'device123',
+            deviceType: 'Web',
+            userId: 1
+        );
 
         $device = $this->deviceAccessRepository->save($deviceData);
 

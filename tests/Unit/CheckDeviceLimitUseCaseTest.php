@@ -4,7 +4,7 @@ namespace Qtvhao\DeviceAccessControl\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Qtvhao\DeviceAccessControl\Core\UseCases\CheckDeviceLimitUseCase;
-use Qtvhao\DeviceAccessControl\Interfaces\DeviceAccessRepositoryInterface;
+use Qtvhao\DeviceAccessControl\Core\Interfaces\DeviceAccessRepositoryInterface;
 use Mockery;
 
 class CheckDeviceLimitUseCaseTest extends TestCase

@@ -6,7 +6,7 @@
     <!-- Define the directory where tests are located -->
     <testsuites>
         <testsuite name="Module Tests">
-            <directory suffix="Test.php">./tests</directory>
+            <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
     </testsuites>
 

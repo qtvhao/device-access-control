@@ -5,11 +5,16 @@ class DeviceData
 {
     private $deviceId;
     private $deviceType;
+    private $userId;
 
-    public function __construct(array $data)
-    {
-        $this->deviceId = $data['deviceId'];
-        $this->deviceType = $data['deviceType'];
+    public function __construct(
+        string $deviceId,
+        string $deviceType,
+        int $userId
+    ) {
+        $this->deviceId = $deviceId;
+        $this->deviceType = $deviceType;
+        $this->userId = $userId;
     }
 
     public function getDeviceId(): string
@@ -30,5 +35,15 @@ class DeviceData
     public function setDeviceType(string $deviceType): void
     {
         $this->deviceType = $deviceType;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
     }
 }
