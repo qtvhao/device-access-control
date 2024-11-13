@@ -16,6 +16,7 @@ class AddNewDeviceUseCaseTest extends TestCase
         $deviceData = new DeviceData(
             userId: 123,
             deviceId: '123456',
+            deviceName: 'Web Device',
             deviceType: 'Web'
         );
         $deviceRepositoryMock = $this->createMock(DeviceAccessRepositoryInterface::class);
@@ -24,7 +25,9 @@ class AddNewDeviceUseCaseTest extends TestCase
                              ->with($deviceData)
                                 ->willReturn(new Device(
                                     deviceId: $deviceData->getDeviceId(),
-                                    deviceType: $deviceData->getDeviceType()
+                                    deviceType: $deviceData->getDeviceType(),
+                                    deviceName: $deviceData->getDeviceName(),
+                                    userId: $deviceData->getUserId()
                                 ));
 
         $useCase = new AddNewDeviceUseCase($deviceRepositoryMock);
