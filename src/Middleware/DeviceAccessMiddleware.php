@@ -48,7 +48,15 @@ class DeviceAccessMiddleware
             $jwtToken = new \Tymon\JWTAuth\Token($token);
             $jwtPayload = $this->jwt->decode($jwtToken);
         } catch (TokenExpiredException $e) {
-            return new Response('Token đã hết hạn', Response::HTTP_UNAUTHORIZED);
+            // Try refreshing the token
+            try {
+                $newToken = $this->jwt->refresh($jwtToken);
+                // Attach the new token to the response headers for the client
+                $request->headers->set('Authorization', 'Bearer ' . $newToken);
+                $jwtPayload = $this->jwt->decode(new \Tymon\JWTAuth\Token($newToken));
+            } catch (JWTException $refreshException) {
+                return new Response('Token đã hết hạn và không thể làm mới', Response::HTTP_UNAUTHORIZED);
+            }
         } catch (TokenInvalidException $e) {
             return new Response('Token không hợp lệ', Response::HTTP_BAD_REQUEST);
         } catch (JWTException $e) {
