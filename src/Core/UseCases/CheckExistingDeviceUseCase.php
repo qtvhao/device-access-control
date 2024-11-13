@@ -12,9 +12,9 @@ class CheckExistingDeviceUseCase
         $this->deviceRepository = $deviceRepository;
     }
 
-    public function execute($deviceId)
+    public function execute($deviceId, $userId): bool
     {
-        $device = $this->deviceRepository->findByDeviceId($deviceId);
+        $device = $this->deviceRepository->findByDeviceId($deviceId, $userId);
         return $device !== null and $device->getDeviceId() === $deviceId;
     }
 }
