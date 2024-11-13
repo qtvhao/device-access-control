@@ -22,18 +22,13 @@ class DeviceAccessOrchestrator
         $this->addNewDeviceUseCase = $addNewDeviceUseCase;
     }
 
-    /**
-     * Execute the device access check.
-     *
-     * @param string $userId
-     * @param string $deviceId
-     * @param string $deviceType
-     * @return bool
-     */
-    public function execute($userId, $deviceId, $deviceType)
+    public function execute(DeviceData $deviceData): bool
     {
+        $deviceId = $deviceData->getDeviceId();
+        $deviceType = $deviceData->getDeviceType();
+        $userId = $deviceData->getUserId();
         // Step 1: Kiểm tra thiết bị đã tồn tại chưa
-        if ($this->checkExistingDeviceUseCase->execute($deviceId)) {
+        if ($this->checkExistingDeviceUseCase->execute($deviceId, $userId)) {
             // Thiết bị đã tồn tại, cho phép truy cập
             return true;
         }
@@ -45,11 +40,7 @@ class DeviceAccessOrchestrator
         }
 
         // Step 3: Thêm thiết bị mới vào hệ thống
-        $this->addNewDeviceUseCase->execute(new DeviceData(
-            deviceId: $deviceId,
-            deviceType: $deviceType,
-            userId: $userId
-        ));
+        $this->addNewDeviceUseCase->execute($deviceData);
 
         // Thiết bị mới đã được thêm, cho phép truy cập
         return true;
