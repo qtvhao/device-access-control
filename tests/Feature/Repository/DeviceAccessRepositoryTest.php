@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Qtvhao\DeviceAccessControl\Repository\DeviceAccessRepository;
 use Qtvhao\DeviceAccessControl\Core\Data\DeviceData;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Qtvhao\DeviceAccessControl\Core\Enums\DeviceEnums;
 use Qtvhao\DeviceAccessControl\Core\Interfaces\DeviceAccessRepositoryInterface;
 
 class DeviceAccessRepositoryTest extends TestCase
@@ -31,7 +32,7 @@ class DeviceAccessRepositoryTest extends TestCase
         // Insert a device directly into the database
         $this->deviceAccessRepository->save(new DeviceData(
             deviceId: $deviceId,
-            deviceType: 'Web',
+            deviceType: DeviceEnums::DEVICE_TYPE_WEB_BROWSER,
             deviceName: 'Web Browser',
             userId: $user->id
         ));
@@ -40,14 +41,14 @@ class DeviceAccessRepositoryTest extends TestCase
 
         $this->assertNotNull($device);
         $this->assertEquals($deviceId, $device->getDeviceId());
-        $this->assertEquals('Web', $device->getDeviceType());
+        $this->assertEquals(DeviceEnums::DEVICE_TYPE_WEB_BROWSER, $device->getDeviceType());
     }
 
     public function test_it_can_save_a_device()
     {
         $deviceData = new DeviceData(
             deviceId: 'device123',
-            deviceType: 'Web',
+            deviceType: DeviceEnums::DEVICE_TYPE_WEB_BROWSER,
             deviceName: 'Web Browser',
             userId: 1
         );
@@ -56,7 +57,7 @@ class DeviceAccessRepositoryTest extends TestCase
 
         $this->assertNotNull($device);
         $this->assertEquals('device123', $device->getDeviceId());
-        $this->assertEquals('Web', $device->getDeviceType());
+        $this->assertEquals(DeviceEnums::DEVICE_TYPE_WEB_BROWSER, $device->getDeviceType());
     }
 
     protected function tearDown(): void
