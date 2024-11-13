@@ -18,18 +18,20 @@ class CheckExistingDeviceUseCaseTest extends TestCase
         
         $existingDevice = new Device(
             deviceId: 'abc123',
-            deviceType: 'Web'
+            deviceType: 'Web',
+            deviceName: 'Web Device',
+            userId: 1
         );
 
         // Assume that the device with ID 'abc123' is already saved
         $deviceRepositoryMock->shouldReceive('findByDeviceId')
-                             ->with('abc123')
+                             ->with($existingDevice->getDeviceId())
                              ->andReturn($existingDevice); // Giả lập thiết bị được trả về từ repository
 
         // Construct the use case with the mocked repository
         $useCase = new CheckExistingDeviceUseCase($deviceRepositoryMock);
         
-        $result = $useCase->execute('abc123');
+        $result = $useCase->execute($existingDevice->getDeviceId());
 
         // If the device with ID 'abc123' is already saved before, access should be allowed
         $this->assertTrue($result, "Access should be allowed when device already saved before");
