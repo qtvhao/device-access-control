@@ -27,17 +27,19 @@ class DeviceAccessRepository implements DeviceAccessRepositoryInterface
         $saved = $this->model->newQuery()->create([
             'device_id' => $deviceData->getDeviceId(),
             'device_type' => $deviceData->getDeviceType(),
+            'device_name' => $deviceData->getDeviceName(),
             'user_id' => $deviceData->getUserId()
         ]);
         // cast the model to the entity
         return new Device(
             deviceId: $saved->device_id,
             deviceType: $saved->device_type,
+            deviceName: $saved->device_name,
             userId: $saved->user_id
         );
     }
 
-    public function findByDeviceId(string $deviceId): ?Device
+    public function findByDeviceId(string $deviceId, string $deviceType): ?Device
     {
         $device = $this->model->where('device_id', $deviceId)->first();
 
@@ -48,6 +50,7 @@ class DeviceAccessRepository implements DeviceAccessRepositoryInterface
         return new Device(
             deviceId: $device->device_id,
             deviceType: $device->device_type,
+            deviceName: $device->device_name,
             userId: $device->user_id
         );
     }
