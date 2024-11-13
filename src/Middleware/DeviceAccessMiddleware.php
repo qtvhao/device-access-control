@@ -5,22 +5,25 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Qtvhao\DeviceAccessControl\Core\UseCases\DeviceAccessOrchestrator;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\JWT;
 use Qtvhao\DeviceAccessControl\Core\Data\DeviceData;
+use \Tymon\JWTAuth\JWT;
+use \Tymon\JWTAuth\Contracts\Providers\Auth;
 
 class DeviceAccessMiddleware
 {
     protected $orchestrator;
-    /**
-     * @var JWTAuth|JWT
-     */
-    protected $jwtAuth;
+    protected $auth;
+    protected $jwt;
 
-    public function __construct(DeviceAccessOrchestrator $orchestrator, JWTAuth $jwtAuth)
+    public function __construct(
+        DeviceAccessOrchestrator $orchestrator,
+        JWT $jwt,
+        Auth $auth
+    )
     {
         $this->orchestrator = $orchestrator;
-        $this->jwtAuth = $jwtAuth;
+        $this->jwt = $jwt;
+        $this->auth = $auth;
     }
     /**
      * Handle an incoming request.
@@ -35,12 +38,14 @@ class DeviceAccessMiddleware
             return new Response('The token could not be parsed from the request', Response::HTTP_BAD_REQUEST);
         }
         // Try to get the authenticated user from the token
-        if (!$user = $this->jwtAuth->parseToken()->authenticate()) {
+        $jwtToken = new \Tymon\JWTAuth\Token($request->bearerToken());
+        $jwtPayload = $this->jwt->decode($jwtToken);
+        if (!$user = $this->auth->byId(
+            $jwtPayload->getSubject())
+        ) {
             return new Response('Không có quyền truy cập', Response::HTTP_UNAUTHORIZED);
         }
-
-        $jwtPayload = $this->jwtAuth->getPayload();
-        $deviceInfo = $jwtPayload?->dev ?? null;
+        $deviceInfo = $jwtPayload->toArray()['dev'] ?? null;
         if (!$deviceInfo || !is_array($deviceInfo)) {
             return new Response('Thiếu thông tin thiết bị', Response::HTTP_BAD_REQUEST);
         }
