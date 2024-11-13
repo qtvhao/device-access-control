@@ -32,10 +32,11 @@ class DeviceAccessRepositoryTest extends TestCase
         $this->deviceAccessRepository->save(new DeviceData(
             deviceId: $deviceId,
             deviceType: 'Web',
+            deviceName: 'Web Browser',
             userId: $user->id
         ));
 
-        $device = $this->deviceAccessRepository->findByDeviceId($deviceId);
+        $device = $this->deviceAccessRepository->findByDeviceId($deviceId, $user->id);
 
         $this->assertNotNull($device);
         $this->assertEquals($deviceId, $device->getDeviceId());
@@ -47,6 +48,7 @@ class DeviceAccessRepositoryTest extends TestCase
         $deviceData = new DeviceData(
             deviceId: 'device123',
             deviceType: 'Web',
+            deviceName: 'Web Browser',
             userId: 1
         );
 
