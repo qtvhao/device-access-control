@@ -63,7 +63,8 @@ class DeviceAccessCacheDecoratorTest extends TestCase
         $redisMock->shouldReceive('set')
             ->with(
                 "device:" . $device->getDeviceId() . ":user:" . $device->getUserId(),
-                json_encode(['deviceId' => 'device456', 'deviceType' => 'Mobile'])
+                json_encode(['deviceId' => 'device456', 'deviceType' => 'Mobile']),
+                ['EX' => 3600] // Cache for 1 hour
             )
             ->once();
 

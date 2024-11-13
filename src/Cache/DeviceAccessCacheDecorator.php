@@ -29,22 +29,24 @@ class DeviceAccessCacheDecorator implements DeviceAccessRepositoryInterface
         return $device;
     }
 
-    public function findByDeviceId(string $deviceId): ?Device
+    public function findByDeviceId(string $deviceId, string $userId): Device
     {
-        $cachedData = $this->cache->get("device:$deviceId");
+        $cachedData = $this->cache->get("device:$deviceId:user:$userId");
         if ($cachedData) {
             $device = json_decode($cachedData, true);
             return new Device(
                 deviceId: $device['deviceId'],
-                deviceType: $device['deviceType']
+                deviceType: $device['deviceType'],
+                deviceName: 'Mobile Device',
+                userId: $userId,
             );
         }
 
-        $device = $this->repository->findByDeviceId($deviceId);
-        $this->cache->set("device:$deviceId", json_encode([
+        $device = $this->repository->findByDeviceId($deviceId, $userId);
+        $this->cache->set("device:$deviceId:user:$userId", json_encode([
             'deviceId' => $device->getDeviceId(),
             'deviceType' => $device->getDeviceType()
-        ]));
+        ]), ['EX' => 3600]); // Cache for 1 hour
 
         return $device;
     }
