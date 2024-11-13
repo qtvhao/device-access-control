@@ -17,6 +17,13 @@ class DeviceAccessCacheDecorator implements DeviceAccessRepositoryInterface
         $this->cache = $cache;
     }
 
+    public function updateLastAccessTime(string $deviceId, string $userId, \DateTime $lastAccessTime): bool
+    {
+        $result = $this->repository->updateLastAccessTime($deviceId, $userId, $lastAccessTime);
+
+        return $result;
+    }
+
     public function save(DeviceData $device): Device
     {
         $device = $this->repository->save($device);

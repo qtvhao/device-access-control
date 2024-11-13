@@ -11,15 +11,18 @@ class DeviceAccessOrchestrator
     protected $checkExistingDeviceUseCase;
     protected $checkDeviceLimitUseCase;
     protected $addNewDeviceUseCase;
+    protected $updateDeviceAccessTimeUseCase;
 
     public function __construct(
         CheckExistingDeviceUseCase $checkExistingDeviceUseCase,
         CheckDeviceLimitUseCase $checkDeviceLimitUseCase,
-        AddNewDeviceUseCase $addNewDeviceUseCase
+        AddNewDeviceUseCase $addNewDeviceUseCase,
+        UpdateDeviceAccessTimeUseCase $updateDeviceAccessTimeUseCase
     ) {
         $this->checkExistingDeviceUseCase = $checkExistingDeviceUseCase;
         $this->checkDeviceLimitUseCase = $checkDeviceLimitUseCase;
         $this->addNewDeviceUseCase = $addNewDeviceUseCase;
+        $this->updateDeviceAccessTimeUseCase = $updateDeviceAccessTimeUseCase;
     }
 
     public function execute(DeviceData $deviceData): bool
@@ -29,7 +32,8 @@ class DeviceAccessOrchestrator
         $userId = $deviceData->getUserId();
         // Step 1: Kiểm tra thiết bị đã tồn tại chưa
         if ($this->checkExistingDeviceUseCase->execute($deviceId, $userId)) {
-            // Thiết bị đã tồn tại, cho phép truy cập
+            // Thiết bị đã tồn tại, cập nhật thời gian truy cập cuối cùng
+            $this->updateDeviceAccessTimeUseCase->execute($deviceId, $userId);
             return true;
         }
 

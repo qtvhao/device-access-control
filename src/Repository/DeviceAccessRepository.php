@@ -22,6 +22,15 @@ class DeviceAccessRepository implements DeviceAccessRepositoryInterface
             ->where('user_id', $userId)->count();
     }
 
+    public function updateLastAccessTime($deviceId, $userId, \DateTime $currentTime): bool {
+        $device = $this->model->newQuery()->where('device_id', $deviceId)->where('user_id', $userId)->first();
+        if ($device === null) {
+            return false;
+        }
+        $device->last_accessed = $currentTime;
+        return $device->save();
+    }
+
     public function save(DeviceData $deviceData): Device
     {
         $saved = $this->model->newQuery()->create([
