@@ -27,7 +27,7 @@ class DeviceAccessOrchestratorTest extends TestCase
 
         // Mock device exists
         $checkExistingDeviceMock->shouldReceive('execute')
-                                ->with($deviceData->getDeviceId())
+                                ->with($deviceData->getDeviceId(), $deviceData->getUserId())
                                 ->andReturn(true);
 
         $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock);
@@ -53,7 +53,7 @@ class DeviceAccessOrchestratorTest extends TestCase
         );
         // Mock device does not exist
         $checkExistingDeviceMock->shouldReceive('execute')
-                                ->with($deviceData->getDeviceId())
+                                ->with($deviceData->getDeviceId(), $deviceData->getUserId())
                                 ->andReturn(false);
 
         // Mock device limit exceeded
@@ -85,7 +85,7 @@ class DeviceAccessOrchestratorTest extends TestCase
 
         // Mock device does not exist
         $checkExistingDeviceMock->shouldReceive('execute')
-                                ->with($deviceData->getDeviceId())
+                                ->with($deviceData->getDeviceId(), $deviceData->getUserId())
                                 ->andReturn(false);
 
         // Mock device limit not exceeded
