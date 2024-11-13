@@ -52,6 +52,7 @@ class DeviceAccessMiddleware
         // Get the device ID from the JWT payload or request headers
         $deviceId = $deviceInfo['id'];
         $deviceType = $deviceInfo['type'];
+        $deviceName = $request->header('Device-Name', $request->header('User-Agent', 'Unknown'));
 
         if (!$deviceId || !$deviceType) {
             // Return an error if headers are missing
@@ -63,7 +64,7 @@ class DeviceAccessMiddleware
         $isAllowed = $this->orchestrator->execute(new DeviceData(
             deviceId: $deviceId,
             deviceType: $deviceType,
-            deviceName: $request->header('User-Agent'),
+            deviceName: $deviceName,
             userId: $userId
         ));
 
