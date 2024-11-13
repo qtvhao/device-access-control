@@ -18,15 +18,22 @@ class DeviceAccessOrchestratorTest extends TestCase
         $checkDeviceLimitMock = Mockery::mock(CheckDeviceLimitUseCase::class);
         $addNewDeviceMock = Mockery::mock(AddNewDeviceUseCase::class);
 
+        $deviceData = new DeviceData(
+            deviceId: 'device123',
+            deviceType: 'Mobile',
+            deviceName: 'Mobile Device',
+            userId: $this->userId
+        );
+
         // Mock device exists
         $checkExistingDeviceMock->shouldReceive('execute')
-                                ->with('device123')
+                                ->with($deviceData->getDeviceId())
                                 ->andReturn(true);
 
         $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock);
         
         // Execute the orchestrator method
-        $result = $orchestrator->execute($this->userId, 'device123', 'Mobile');
+        $result = $orchestrator->execute($deviceData);
         
         // Assert that access is allowed since the device already exists
         $this->assertTrue($result, "Access should be allowed if the device already exists.");
@@ -38,9 +45,15 @@ class DeviceAccessOrchestratorTest extends TestCase
         $checkDeviceLimitMock = Mockery::mock(CheckDeviceLimitUseCase::class);
         $addNewDeviceMock = Mockery::mock(AddNewDeviceUseCase::class);
 
+        $deviceData = new DeviceData(
+            deviceId: 'device123',
+            deviceType: 'Mobile',
+            deviceName: 'Mobile Device',
+            userId: $this->userId
+        );
         // Mock device does not exist
         $checkExistingDeviceMock->shouldReceive('execute')
-                                ->with('device123')
+                                ->with($deviceData->getDeviceId())
                                 ->andReturn(false);
 
         // Mock device limit exceeded
@@ -51,7 +64,7 @@ class DeviceAccessOrchestratorTest extends TestCase
         $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock);
         
         // Execute the orchestrator method
-        $result = $orchestrator->execute($this->userId, 'device123', 'Mobile');
+        $result = $orchestrator->execute($deviceData);
         
         // Assert that access is denied since the device limit is exceeded
         $this->assertFalse($result, "Access should be denied if the device limit for that type is exceeded.");
@@ -63,22 +76,29 @@ class DeviceAccessOrchestratorTest extends TestCase
         $checkDeviceLimitMock = Mockery::mock(CheckDeviceLimitUseCase::class);
         $addNewDeviceMock = Mockery::mock(AddNewDeviceUseCase::class);
 
+        $deviceData = new DeviceData(
+            deviceId: 'device123',
+            deviceType: 'Mobile',
+            deviceName: 'Mobile Device',
+            userId: $this->userId
+        );
+
         // Mock device does not exist
         $checkExistingDeviceMock->shouldReceive('execute')
-                                ->with('device123')
+                                ->with($deviceData->getDeviceId())
                                 ->andReturn(false);
 
         // Mock device limit not exceeded
         $checkDeviceLimitMock->shouldReceive('execute')
-                             ->with($this->userId, 'Mobile')
+                             ->with($this->userId, $deviceData->getDeviceType())
                              ->andReturn(true);
 
         // Expect addNewDeviceUseCase to be called with the correct parameters
         $addNewDeviceMock->shouldReceive('execute')
-                         ->with(Mockery::on(function (DeviceData $deviceData) {
+                         ->with(Mockery::on(function (DeviceData $deviceDataToMake) use ($deviceData) {
                              return $deviceData instanceof DeviceData &&
-                                    $deviceData->getDeviceId() === 'device123' &&
-                                    $deviceData->getDeviceType() === 'Mobile' &&
+                                    $deviceData->getDeviceId() === $deviceDataToMake->getDeviceId() &&
+                                    $deviceData->getDeviceType() === $deviceDataToMake->getDeviceType() &&
                                     $deviceData->getUserId() === $this->userId;
                          }))
                          ->once();
@@ -86,7 +106,7 @@ class DeviceAccessOrchestratorTest extends TestCase
         $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock);
         
         // Execute the orchestrator method
-        $result = $orchestrator->execute($this->userId, 'device123', 'Mobile');
+        $result = $orchestrator->execute($deviceData);
         
         // Assert that access is allowed and a new device was added
         $this->assertTrue($result, "Access should be allowed if device limit is not exceeded, and the new device should be added.");
