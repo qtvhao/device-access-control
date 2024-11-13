@@ -5,6 +5,7 @@ namespace Qtvhao\DeviceAccessControl\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use Qtvhao\DeviceAccessControl\Core\UseCases\CheckDeviceLimitUseCase;
 use Qtvhao\DeviceAccessControl\Core\Interfaces\DeviceAccessRepositoryInterface;
+use Qtvhao\DeviceAccessControl\Core\Enums\DeviceEnums;
 use Mockery;
 
 class CheckDeviceLimitUseCaseTest extends TestCase
@@ -19,7 +20,11 @@ class CheckDeviceLimitUseCaseTest extends TestCase
         // No device of type 'Mobile' yet
 
         // Khởi tạo use case với giới hạn thiết bị là 1
-        $useCase = new CheckDeviceLimitUseCase($deviceRepositoryMock, 1);
+        $useCase = new CheckDeviceLimitUseCase($deviceRepositoryMock, [
+            DeviceEnums::DEVICE_TYPE_WEB => 1,
+            DeviceEnums::DEVICE_TYPE_MOBILE => 1,
+            DeviceEnums::DEVICE_TYPE_TABLET => 1,
+        ]);
         
         // Thực thi use case
         $result = $useCase->execute('user123', 'Mobile');
@@ -37,7 +42,11 @@ class CheckDeviceLimitUseCaseTest extends TestCase
         // One device of type 'Mobile' exists
 
         // Khởi tạo use case với giới hạn thiết bị là 1
-        $useCase = new CheckDeviceLimitUseCase($deviceRepositoryMock, 1);
+        $useCase = new CheckDeviceLimitUseCase($deviceRepositoryMock, [
+            DeviceEnums::DEVICE_TYPE_WEB => 1,
+            DeviceEnums::DEVICE_TYPE_MOBILE => 1,
+            DeviceEnums::DEVICE_TYPE_TABLET => 1,
+        ]);
         
         // Thực thi use case
         $result = $useCase->execute('user123', 'Mobile');
