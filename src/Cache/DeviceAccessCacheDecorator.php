@@ -9,7 +9,7 @@ use Redis;
 class DeviceAccessCacheDecorator implements DeviceAccessRepositoryInterface
 {
     private DeviceAccessRepositoryInterface $repository;
-    private Redis $cache;
+    private \Redis $cache;
 
     public function __construct(DeviceAccessRepositoryInterface $repository, Redis $cache)
     {
@@ -26,14 +26,13 @@ class DeviceAccessCacheDecorator implements DeviceAccessRepositoryInterface
 
     public function save(DeviceData $device): Device
     {
-        $device = $this->repository->save($device);
+        // Save device data and update cache
+        $savedDevice = $this->repository->save($device);
 
-        $this->cache->set("device:{$device->getDeviceId()}", json_encode([
-            'deviceId' => $device->getDeviceId(),
-            'deviceType' => $device->getDeviceType()
-        ]));
+        $cacheKey = $this->getDeviceCacheKey($device->getUserId(), $device->getDeviceId());
+        $this->cache->set($cacheKey, $savedDevice, ['EX' => 3600]); // Cache for 1 hour
 
-        return $device;
+        return $savedDevice;
     }
 
     public function findByDeviceId(string $deviceId, string $userId): Device
@@ -60,16 +59,25 @@ class DeviceAccessCacheDecorator implements DeviceAccessRepositoryInterface
 
     public function countByDeviceType(string $userId, string $deviceType): int
     {
-        $key = "device:$userId:$deviceType";
+        $key = $this->getDeviceCountCacheKey($userId, $deviceType);
         $cachedData = $this->cache->get($key);
         if ($cachedData) {
             return (int) $cachedData;
         }
 
         $deviceCount = $this->repository->countByDeviceType($userId, $deviceType);
-        $this->cache->set($key, $deviceCount);
+        $this->cache->set($key, $deviceCount, ['EX' => 3600]); // Cache for 1 hour
 
         return $deviceCount;
     }
     
+    private function getDeviceCacheKey(string $userId, string $deviceId): string
+    {
+        return "device:user:{$userId}:device:{$deviceId}";
+    }
+
+    private function getDeviceCountCacheKey(string $userId, string $deviceType): string
+    {
+        return "device_count:user:{$userId}:type:{$deviceType}";
+    }
 }
