@@ -7,6 +7,6 @@ use Qtvhao\DeviceAccessControl\Core\Entities\Device;
 
 interface DeviceAccessRepositoryInterface {
     public function save(DeviceData $device): Device;
-    public function findByDeviceId(string $deviceId): ?Device;
+    public function findByDeviceId(string $deviceId, string $userId): ?Device;
     public function countByDeviceType(string $userId, string $deviceType): int;
 }
