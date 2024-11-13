@@ -22,7 +22,7 @@ class DeviceAccessControlServiceProvider extends ServiceProvider
             return new CheckDeviceLimitUseCase(
                 $app->make(DeviceAccessRepositoryInterface::class),
                 config('device_access_control.device_limit', [
-                    DeviceEnums::DEVICE_TYPE_WEB => 1,
+                    DeviceEnums::DEVICE_TYPE_WEB_BROWSER => 1,
                     DeviceEnums::DEVICE_TYPE_MOBILE => 1,
                     DeviceEnums::DEVICE_TYPE_TABLET => 1,
                 ]) // lấy device_limit từ config, default là 1 nếu không có

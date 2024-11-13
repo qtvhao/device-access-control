@@ -21,7 +21,7 @@ class CheckDeviceLimitUseCaseTest extends TestCase
 
         // Khởi tạo use case với giới hạn thiết bị là 1
         $useCase = new CheckDeviceLimitUseCase($deviceRepositoryMock, [
-            DeviceEnums::DEVICE_TYPE_WEB => 1,
+            DeviceEnums::DEVICE_TYPE_WEB_BROWSER => 1,
             DeviceEnums::DEVICE_TYPE_MOBILE => 1,
             DeviceEnums::DEVICE_TYPE_TABLET => 1,
         ]);
@@ -43,7 +43,7 @@ class CheckDeviceLimitUseCaseTest extends TestCase
 
         // Khởi tạo use case với giới hạn thiết bị là 1
         $useCase = new CheckDeviceLimitUseCase($deviceRepositoryMock, [
-            DeviceEnums::DEVICE_TYPE_WEB => 1,
+            DeviceEnums::DEVICE_TYPE_WEB_BROWSER => 1,
             DeviceEnums::DEVICE_TYPE_MOBILE => 1,
             DeviceEnums::DEVICE_TYPE_TABLET => 1,
         ]);

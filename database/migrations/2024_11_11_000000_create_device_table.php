@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->id();
             $table->string('device_id')->index();
             $table->string('device_name')->nullable();
-            $table->enum('device_type', [DeviceEnums::DEVICE_TYPE_WEB, DeviceEnums::DEVICE_TYPE_TABLET, DeviceEnums::DEVICE_TYPE_MOBILE]);
+            $table->enum('device_type', [DeviceEnums::DEVICE_TYPE_WEB_BROWSER, DeviceEnums::DEVICE_TYPE_TABLET, DeviceEnums::DEVICE_TYPE_MOBILE]);
             $table->timestamp('last_accessed')->useCurrent();
             $table->timestamps();
 
