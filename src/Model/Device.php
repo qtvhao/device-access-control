@@ -10,5 +10,6 @@ class Device extends Model
         'user_id',
         'device_id',
         'device_type',
+        'device_name'
     ];
 }
