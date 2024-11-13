@@ -19,20 +19,30 @@ class DeviceAccessMiddlewareTest extends TestCase
         $orchestratorMock->shouldReceive('execute')
             ->andReturn(true);
 
-        $jwtAuthMock = Mockery::mock('alias:Tymon\JWTAuth\Facades\JWTAuth');
-        $jwtAuthMock->shouldReceive('parseToken')->andReturnSelf();
-        $jwtAuthMock->shouldReceive('authenticate')->andReturn((object) ['id' => $this->userId]);
-        $jwtAuthMock->shouldReceive('getPayload')->andReturn((object) [
+        $jwt = Mockery::mock('alias:Tymon\JWTAuth\JWT');
+        $jwt->shouldReceive('parseToken')->andReturnSelf();
+        $jwt->shouldReceive('authenticate')->andReturn((object) ['id' => $this->userId]);
+        $jwt->shouldReceive('getPayload')->andReturn((object) [
             'dev' => [
                 'id' => 'abc123',
                 'type' => DeviceEnums::DEVICE_TYPE_WEB
             ]
         ]);
-         
+        $jwt->shouldReceive('decode')->andReturn(new class {
+            public function getSubject() {
+                return 1;
+            }
+            public function toArray() {
+                return ['dev' => ['id' => 'abc123', 'type' => DeviceEnums::DEVICE_TYPE_WEB]];
+            }
+        });
 
-        $middleware = new DeviceAccessMiddleware($orchestratorMock, $jwtAuthMock);
+        $auth = Mockery::mock('alias:Tymon\JWTAuth\Contracts\Providers\Auth');
+        $auth->shouldReceive('byId')->andReturn((object) ['id' => $this->userId]);
+
+        $middleware = new DeviceAccessMiddleware($orchestratorMock, $jwt, $auth);
         $request = Request::create('/learning', 'GET', [], [], [], [
-            'HTTP_Authorization' => 'Bearer some-valid-token'
+            'HTTP_Authorization' => 'Bearer some.valid.token'
         ]);
         
         $response = $middleware->handle($request, function () {
@@ -49,18 +59,30 @@ class DeviceAccessMiddlewareTest extends TestCase
         $orchestratorMock->shouldReceive('execute')
                          ->andReturn(false);
 
-        $jwtAuthMock = Mockery::mock('alias:Tymon\JWTAuth\Facades\JWTAuth');
-        $jwtAuthMock->shouldReceive('parseToken')->andReturnSelf();
-        $jwtAuthMock->shouldReceive('authenticate')->andReturn((object) ['id' => $this->userId]);
-        $jwtAuthMock->shouldReceive('getPayload')->andReturn((object) [
+        $jwt = Mockery::mock('alias:Tymon\JWTAuth\JWT');
+        $jwt->shouldReceive('parseToken')->andReturnSelf();
+        $jwt->shouldReceive('authenticate')->andReturn((object) ['id' => $this->userId]);
+        $jwt->shouldReceive('getPayload')->andReturn((object) [
             'dev' => [
                 'id' => 'abc123',
                 'type' => DeviceEnums::DEVICE_TYPE_WEB
             ]
         ]);
-        $middleware = new DeviceAccessMiddleware($orchestratorMock, $jwtAuthMock);
+        $jwt->shouldReceive('decode')->andReturn(new class {
+            public function getSubject() {
+                return 1;
+            }
+            public function toArray() {
+                return ['dev' => ['id' => 'abc123', 'type' => DeviceEnums::DEVICE_TYPE_WEB]];
+            }
+        });
+
+        $auth = Mockery::mock('alias:Tymon\JWTAuth\Contracts\Providers\Auth');
+        $auth->shouldReceive('byId')->andReturn((object) ['id' => 1]);
+
+        $middleware = new DeviceAccessMiddleware($orchestratorMock, $jwt, $auth);
         $request = Request::create('/learning', 'GET', [], [], [], [
-            'HTTP_Authorization' => 'Bearer some-valid-token'
+            'HTTP_Authorization' => 'Bearer some.valid.token'
         ]);
         
         $response = $middleware->handle($request, function () {

@@ -5,6 +5,7 @@ use Qtvhao\DeviceAccessControl\Core\UseCases\CheckExistingDeviceUseCase;
 use Qtvhao\DeviceAccessControl\Core\UseCases\CheckDeviceLimitUseCase;
 use Qtvhao\DeviceAccessControl\Core\UseCases\AddNewDeviceUseCase;
 use Qtvhao\DeviceAccessControl\Core\UseCases\DeviceAccessOrchestrator;
+use Qtvhao\DeviceAccessControl\Core\UseCases\UpdateDeviceAccessTimeUseCase;
 use Qtvhao\DeviceAccessControl\Core\Data\DeviceData;
 use PHPUnit\Framework\TestCase;
 use Mockery;
@@ -17,6 +18,9 @@ class DeviceAccessOrchestratorTest extends TestCase
         $checkExistingDeviceMock = Mockery::mock(CheckExistingDeviceUseCase::class);
         $checkDeviceLimitMock = Mockery::mock(CheckDeviceLimitUseCase::class);
         $addNewDeviceMock = Mockery::mock(AddNewDeviceUseCase::class);
+        $updateDeviceAccessTimeUseCase = Mockery::mock(UpdateDeviceAccessTimeUseCase::class);
+
+        $updateDeviceAccessTimeUseCase->shouldReceive('execute');
 
         $deviceData = new DeviceData(
             deviceId: 'device123',
@@ -30,7 +34,7 @@ class DeviceAccessOrchestratorTest extends TestCase
                                 ->with($deviceData->getDeviceId(), $deviceData->getUserId())
                                 ->andReturn(true);
 
-        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock);
+        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock, $updateDeviceAccessTimeUseCase);
         
         // Execute the orchestrator method
         $result = $orchestrator->execute($deviceData);
@@ -44,6 +48,7 @@ class DeviceAccessOrchestratorTest extends TestCase
         $checkExistingDeviceMock = Mockery::mock(CheckExistingDeviceUseCase::class);
         $checkDeviceLimitMock = Mockery::mock(CheckDeviceLimitUseCase::class);
         $addNewDeviceMock = Mockery::mock(AddNewDeviceUseCase::class);
+        $updateDeviceAccessTimeUseCase = Mockery::mock(UpdateDeviceAccessTimeUseCase::class);
 
         $deviceData = new DeviceData(
             deviceId: 'device123',
@@ -61,7 +66,7 @@ class DeviceAccessOrchestratorTest extends TestCase
                              ->with($this->userId, 'Mobile')
                              ->andReturn(false);
 
-        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock);
+        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock, $updateDeviceAccessTimeUseCase);
         
         // Execute the orchestrator method
         $result = $orchestrator->execute($deviceData);
@@ -75,6 +80,7 @@ class DeviceAccessOrchestratorTest extends TestCase
         $checkExistingDeviceMock = Mockery::mock(CheckExistingDeviceUseCase::class);
         $checkDeviceLimitMock = Mockery::mock(CheckDeviceLimitUseCase::class);
         $addNewDeviceMock = Mockery::mock(AddNewDeviceUseCase::class);
+        $updateDeviceAccessTimeUseCase = Mockery::mock(UpdateDeviceAccessTimeUseCase::class);
 
         $deviceData = new DeviceData(
             deviceId: 'device123',
@@ -103,7 +109,7 @@ class DeviceAccessOrchestratorTest extends TestCase
                          }))
                          ->once();
 
-        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock);
+        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock, $updateDeviceAccessTimeUseCase);
         
         // Execute the orchestrator method
         $result = $orchestrator->execute($deviceData);
