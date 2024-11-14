@@ -27,27 +27,27 @@ class DeviceAccessRepositoryTest extends TestCase
     public function test_it_can_find_a_device_by_id()
     {
         $user = \App\Models\User::factory()->create();
-        $deviceId = 'device123';
+        $deviceUuid = 'device123';
 
         // Insert a device directly into the database
         $this->deviceAccessRepository->save(new DeviceData(
-            deviceId: $deviceId,
+            deviceUuid: $deviceUuid,
             deviceType: DeviceEnums::DEVICE_TYPE_WEB_BROWSER,
             deviceName: 'Web Browser',
             userId: $user->id
         ));
 
-        $device = $this->deviceAccessRepository->findByDeviceId($deviceId, $user->id);
+        $device = $this->deviceAccessRepository->findByDeviceUuid($deviceUuid, $user->id);
 
         $this->assertNotNull($device);
-        $this->assertEquals($deviceId, $device->getDeviceId());
+        $this->assertEquals($deviceUuid, $device->getDeviceUuid());
         $this->assertEquals(DeviceEnums::DEVICE_TYPE_WEB_BROWSER, $device->getDeviceType());
     }
 
     public function test_it_can_save_a_device()
     {
         $deviceData = new DeviceData(
-            deviceId: 'device123',
+            deviceUuid: 'device123',
             deviceType: DeviceEnums::DEVICE_TYPE_WEB_BROWSER,
             deviceName: 'Web Browser',
             userId: 1
@@ -56,7 +56,7 @@ class DeviceAccessRepositoryTest extends TestCase
         $device = $this->deviceAccessRepository->save($deviceData);
 
         $this->assertNotNull($device);
-        $this->assertEquals('device123', $device->getDeviceId());
+        $this->assertEquals('device123', $device->getDeviceUuid());
         $this->assertEquals(DeviceEnums::DEVICE_TYPE_WEB_BROWSER, $device->getDeviceType());
     }
 

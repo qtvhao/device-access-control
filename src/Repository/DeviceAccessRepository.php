@@ -56,14 +56,14 @@ class DeviceAccessRepository implements DeviceAccessRepositoryInterface
     {
         try {
             $saved = $this->model->newQuery()->create([
-                'device_id' => $deviceData->getDeviceId(),
+                'device_id' => $deviceData->getDeviceUuid(),
                 'device_type' => $deviceData->getDeviceType(),
                 'device_name' => $deviceData->getDeviceName(),
                 'user_id' => $deviceData->getUserId()
             ]);
             // cast the model to the entity
             return new Device(
-                deviceId: $saved->device_id,
+                deviceUuid: $saved->device_uuid,
                 deviceType: $saved->device_type,
                 deviceName: $saved->device_name,
                 userId: $saved->user_id
@@ -77,23 +77,26 @@ class DeviceAccessRepository implements DeviceAccessRepositoryInterface
         }
     }
 
-    public function findByDeviceId(string $deviceId, string $userId): ?Device
+    public function findByDeviceUuid(string $deviceUuid, string $userId): ?Device
     {
         try {
-            $device = $this->model->where('device_id', $deviceId)->where('user_id', $userId)->first();
+            /**
+             * @var DeviceModel $device
+             */
+            $device = $this->model->where('deviceUuid', $deviceUuid)->where('user_id', $userId)->first();
             if ($device === null) {
                 return null;
             }
             return new Device(
-                deviceId: $device->device_id,
+                deviceUuid: $device->device_uuid,
                 deviceType: $device->device_type,
                 deviceName: $device->device_name,
                 userId: $device->user_id
             );
         } catch (\Exception $e) {
-            $this->logger->error("Failed to find device by deviceId", [
+            $this->logger->error("Failed to find device by deviceUuid", [
                 'error' => $e->getMessage(),
-                'deviceId' => $deviceId,
+                'deviceUuid' => $deviceUuid,
                 'userId' => $userId
             ]);
             return null; // Trả về null nếu có lỗi
