@@ -33,7 +33,7 @@ class DeviceAccessMiddlewareTest extends TestCase
                 return 1;
             }
             public function toArray() {
-                return ['dev' => ['id' => 'abc123', 'type' => DeviceEnums::DEVICE_TYPE_WEB_BROWSER]];
+                return ['dev' => ['uuid' => 'abc123', 'type' => DeviceEnums::DEVICE_TYPE_WEB_BROWSER]];
             }
         });
 
@@ -64,7 +64,7 @@ class DeviceAccessMiddlewareTest extends TestCase
         $jwt->shouldReceive('authenticate')->andReturn((object) ['id' => $this->userId]);
         $jwt->shouldReceive('getPayload')->andReturn((object) [
             'dev' => [
-                'id' => 'abc123',
+                'uuid' => 'abc123',
                 'type' => DeviceEnums::DEVICE_TYPE_WEB_BROWSER
             ]
         ]);
@@ -73,7 +73,7 @@ class DeviceAccessMiddlewareTest extends TestCase
                 return 1;
             }
             public function toArray() {
-                return ['dev' => ['id' => 'abc123', 'type' => DeviceEnums::DEVICE_TYPE_WEB_BROWSER]];
+                return ['dev' => ['uuid' => 'abc123', 'type' => DeviceEnums::DEVICE_TYPE_WEB_BROWSER]];
             }
         });
 

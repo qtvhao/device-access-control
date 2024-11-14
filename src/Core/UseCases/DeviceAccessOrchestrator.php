@@ -32,7 +32,7 @@ class DeviceAccessOrchestrator
 
     public function execute(DeviceData $deviceData): bool
     {
-        $deviceId = $deviceData->getDeviceId();
+        $deviceId = $deviceData->getDeviceUuid();
         $deviceType = $deviceData->getDeviceType();
         $userId = $deviceData->getUserId();
         // Step 1: Kiểm tra thiết bị đã tồn tại chưa

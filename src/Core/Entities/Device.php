@@ -3,22 +3,32 @@ namespace Qtvhao\DeviceAccessControl\Core\Entities;
 
 class Device
 {
-    private $deviceId;
+    private $deviceUuid;
     private $deviceType;
     private $deviceName;
     private $userId;
 
     public function __construct(
-        string $deviceId,
+        string $deviceUuid,
         string $deviceType,
         string $deviceName,
         int $userId
     )
     {
-        $this->deviceId = $deviceId;
+        $this->deviceUuid = $deviceUuid;
         $this->deviceType = $deviceType;
         $this->deviceName = $deviceName;
         $this->userId = $userId;
+    }
+
+    public function getDeviceName()
+    {
+        return $this->deviceName;
+    }
+
+    public function setDeviceName($deviceName)
+    {
+        $this->deviceName = $deviceName;
     }
 
     public function getUserId()
@@ -31,9 +41,9 @@ class Device
         $this->userId = $userId;
     }
 
-    public function setDeviceId($deviceId)
+    public function setDeviceUuid($deviceUuid)
     {
-        $this->deviceId = $deviceId;
+        $this->deviceUuid = $deviceUuid;
     }
     
     public function setDeviceType($deviceType)
@@ -41,9 +51,9 @@ class Device
         $this->deviceType = $deviceType;
     }
 
-    public function getDeviceId()
+    public function getDeviceUuid()
     {
-        return $this->deviceId;
+        return $this->deviceUuid;
     }
 
     public function getDeviceType()

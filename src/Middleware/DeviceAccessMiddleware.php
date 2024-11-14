@@ -73,7 +73,7 @@ class DeviceAccessMiddleware
             return new Response('Thiếu thông tin thiết bị', Response::HTTP_BAD_REQUEST);
         }
     
-        $deviceId = $deviceInfo['id'] ?? null;
+        $deviceId = $deviceInfo['uuid'] ?? null;
         $deviceType = $deviceInfo['type'] ?? null;
     
         if (!$deviceId || !$deviceType) {
@@ -90,7 +90,7 @@ class DeviceAccessMiddleware
         $deviceName = $request->header('Device-Name', $request->header('User-Agent', 'Unknown'));
         $userId = $user->id;
         $isAllowed = $this->orchestrator->execute(new DeviceData(
-            deviceId: $deviceId,
+            deviceUuid: $deviceId,
             deviceType: $deviceType,
             deviceName: $deviceName,
             userId: $userId

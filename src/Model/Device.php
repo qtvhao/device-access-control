@@ -8,7 +8,7 @@ class Device extends Model
     
     protected $fillable = [
         'user_id',
-        'device_id',
+        'device_uuid',
         'device_type',
         'device_name'
     ];

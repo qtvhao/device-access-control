@@ -47,14 +47,14 @@ class DeviceAccessCacheDecorator implements DeviceAccessRepositoryInterface
         return $savedDevice;
     }
 
-    public function findByDeviceId(string $deviceId, string $userId): Device
+    public function findByDeviceUuid(string $deviceUuid, string $userId): Device
     {
         try {
-            $cachedData = $this->cache->get("device:$deviceId:user:$userId");
+            $cachedData = $this->cache->get("device:$deviceUuid:user:$userId");
             if ($cachedData) {
                 $device = json_decode($cachedData, true);
                 return new Device(
-                    deviceId: $device['deviceId'],
+                    deviceUuid: $device['deviceUuid'],
                     deviceType: $device['deviceType'],
                     deviceName: 'Mobile Device',
                     userId: $userId,
@@ -64,21 +64,21 @@ class DeviceAccessCacheDecorator implements DeviceAccessRepositoryInterface
             // Log lỗi và truy xuất từ repository nếu cache lỗi
             $this->logger->error("Failed to retrieve device data from cache", [
                 'error' => $e->getMessage(),
-                'deviceId' => $deviceId,
+                'deviceUuid' => $deviceUuid,
                 'userId' => $userId
             ]);
         } //
 
-        $device = $this->repository->findByDeviceId($deviceId, $userId);
+        $device = $this->repository->findByDeviceUuid($deviceUuid, $userId);
         try {
-            $this->cache->set("device:$deviceId:user:$userId", json_encode([
-                'deviceId' => $device->getDeviceId(),
+            $this->cache->set("device:$deviceUuid:user:$userId", json_encode([
+                'deviceUuid' => $device->getDeviceUuid(),
                 'deviceType' => $device->getDeviceType()
             ]), ['EX' => 3600]); // Cache for 1 hour
         } catch (\Exception $e) {
             $this->logger->error("Failed to cache device data after retrieving from repository", [
                 'error' => $e->getMessage(),
-                'deviceId' => $deviceId,
+                'deviceUuid' => $deviceUuid,
                 'userId' => $userId
             ]);
         }

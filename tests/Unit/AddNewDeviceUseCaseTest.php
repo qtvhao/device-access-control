@@ -15,7 +15,7 @@ class AddNewDeviceUseCaseTest extends TestCase
     {
         $deviceData = new DeviceData(
             userId: 123,
-            deviceId: '123456',
+            deviceUuid: '123456',
             deviceName: 'Web Device',
             deviceType: 'Web'
         );
@@ -24,7 +24,7 @@ class AddNewDeviceUseCaseTest extends TestCase
                              ->method('save')
                              ->with($deviceData)
                                 ->willReturn(new Device(
-                                    deviceId: $deviceData->getDeviceId(),
+                                    deviceUuid: $deviceData->getDeviceUuid(),
                                     deviceType: $deviceData->getDeviceType(),
                                     deviceName: $deviceData->getDeviceName(),
                                     userId: $deviceData->getUserId()
@@ -33,6 +33,6 @@ class AddNewDeviceUseCaseTest extends TestCase
         $useCase = new AddNewDeviceUseCase($deviceRepositoryMock);
         $saved = $useCase->execute($deviceData);
         $this->assertEquals($saved->getDeviceType(), 'Web');
-        $this->assertEquals($saved->getDeviceId(), '123456');
+        $this->assertEquals($saved->getDeviceUuid(), '123456');
     }
 }

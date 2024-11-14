@@ -23,7 +23,7 @@ class DeviceAccessOrchestratorTest extends TestCase
         $updateDeviceAccessTimeUseCase->shouldReceive('execute');
 
         $deviceData = new DeviceData(
-            deviceId: 'device123',
+            deviceUuid: 'device123',
             deviceType: 'Mobile',
             deviceName: 'Mobile Device',
             userId: $this->userId
@@ -31,7 +31,7 @@ class DeviceAccessOrchestratorTest extends TestCase
 
         // Mock device exists
         $checkExistingDeviceMock->shouldReceive('execute')
-                                ->with($deviceData->getDeviceId(), $deviceData->getUserId())
+                                ->with($deviceData->getDeviceUuid(), $deviceData->getUserId())
                                 ->andReturn(true);
 
         $eventDispatcher = Mockery::mock(\Illuminate\Contracts\Events\Dispatcher::class);
@@ -53,14 +53,14 @@ class DeviceAccessOrchestratorTest extends TestCase
         $updateDeviceAccessTimeUseCase = Mockery::mock(UpdateDeviceAccessTimeUseCase::class);
 
         $deviceData = new DeviceData(
-            deviceId: 'device123',
+            deviceUuid: 'device123',
             deviceType: 'Mobile',
             deviceName: 'Mobile Device',
             userId: $this->userId
         );
         // Mock device does not exist
         $checkExistingDeviceMock->shouldReceive('execute')
-                                ->with($deviceData->getDeviceId(), $deviceData->getUserId())
+                                ->with($deviceData->getDeviceUuid(), $deviceData->getUserId())
                                 ->andReturn(false);
 
         // Mock device limit exceeded
@@ -87,7 +87,7 @@ class DeviceAccessOrchestratorTest extends TestCase
         $updateDeviceAccessTimeUseCase = Mockery::mock(UpdateDeviceAccessTimeUseCase::class);
 
         $deviceData = new DeviceData(
-            deviceId: 'device123',
+            deviceUuid: 'device123',
             deviceType: 'Mobile',
             deviceName: 'Mobile Device',
             userId: $this->userId
@@ -95,7 +95,7 @@ class DeviceAccessOrchestratorTest extends TestCase
 
         // Mock device does not exist
         $checkExistingDeviceMock->shouldReceive('execute')
-                                ->with($deviceData->getDeviceId(), $deviceData->getUserId())
+                                ->with($deviceData->getDeviceUuid(), $deviceData->getUserId())
                                 ->andReturn(false);
 
         // Mock device limit not exceeded
@@ -107,7 +107,7 @@ class DeviceAccessOrchestratorTest extends TestCase
         $addNewDeviceMock->shouldReceive('execute')
                          ->with(Mockery::on(function (DeviceData $deviceDataToMake) use ($deviceData) {
                              return $deviceData instanceof DeviceData &&
-                                    $deviceData->getDeviceId() === $deviceDataToMake->getDeviceId() &&
+                                    $deviceData->getDeviceUuid() === $deviceDataToMake->getDeviceUuid() &&
                                     $deviceData->getDeviceType() === $deviceDataToMake->getDeviceType() &&
                                     $deviceData->getUserId() === $this->userId;
                          }))
