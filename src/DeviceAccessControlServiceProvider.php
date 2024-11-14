@@ -10,13 +10,16 @@ use Illuminate\Routing\Router;
 use Qtvhao\DeviceAccessControl\Core\Enums\DeviceEnums;
 use Qtvhao\DeviceAccessControl\Middleware\DeviceAccessMiddleware;
 use Qtvhao\DeviceAccessControl\Core\UseCases\CheckDeviceLimitUseCase;
+use Qtvhao\DeviceAccessControl\Events\DeviceAccessUpdatedEvent;
+use Qtvhao\DeviceAccessControl\Listeners\UpdateDeviceAccessTimeListener;
+use Illuminate\Support\Facades\Event;
 
 class DeviceAccessControlServiceProvider extends ServiceProvider
 {
     public function register()
     {
         $this->app->bind(DeviceAccessRepositoryInterface::class, function ($app) {
-            return new DeviceAccessRepository(new DeviceModel());
+            return new DeviceAccessRepository(new DeviceModel(), $app->make('log'));
         });
         $this->app->bind(CheckDeviceLimitUseCase::class, function ($app) {
             return new CheckDeviceLimitUseCase(
@@ -43,5 +46,9 @@ class DeviceAccessControlServiceProvider extends ServiceProvider
         $this->publishesMigrations([
             __DIR__.'/../database/migrations' => database_path('migrations'),
         ], 'device-access-control-migrations');
+        Event::listen(
+            DeviceAccessUpdatedEvent::class,
+            UpdateDeviceAccessTimeListener::class
+        );
     }
 }
