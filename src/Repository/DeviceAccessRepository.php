@@ -56,7 +56,7 @@ class DeviceAccessRepository implements DeviceAccessRepositoryInterface
     {
         try {
             $saved = $this->model->newQuery()->create([
-                'device_id' => $deviceData->getDeviceUuid(),
+                'device_uuid' => $deviceData->getDeviceUuid(),
                 'device_type' => $deviceData->getDeviceType(),
                 'device_name' => $deviceData->getDeviceName(),
                 'user_id' => $deviceData->getUserId()
@@ -83,7 +83,7 @@ class DeviceAccessRepository implements DeviceAccessRepositoryInterface
             /**
              * @var DeviceModel $device
              */
-            $device = $this->model->where('deviceUuid', $deviceUuid)->where('user_id', $userId)->first();
+            $device = $this->model->where('device_uuid', $deviceUuid)->where('user_id', $userId)->first();
             if ($device === null) {
                 return null;
             }
