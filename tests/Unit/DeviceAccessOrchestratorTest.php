@@ -34,7 +34,9 @@ class DeviceAccessOrchestratorTest extends TestCase
                                 ->with($deviceData->getDeviceId(), $deviceData->getUserId())
                                 ->andReturn(true);
 
-        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock, $updateDeviceAccessTimeUseCase);
+        $eventDispatcher = Mockery::mock(\Illuminate\Contracts\Events\Dispatcher::class);
+        $eventDispatcher->shouldReceive('dispatch');
+        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock, $updateDeviceAccessTimeUseCase, $eventDispatcher);
         
         // Execute the orchestrator method
         $result = $orchestrator->execute($deviceData);
@@ -65,8 +67,10 @@ class DeviceAccessOrchestratorTest extends TestCase
         $checkDeviceLimitMock->shouldReceive('execute')
                              ->with($this->userId, 'Mobile')
                              ->andReturn(false);
+        $eventDispatcher = Mockery::mock(\Illuminate\Contracts\Events\Dispatcher::class);
+        $eventDispatcher->shouldReceive('dispatch');
 
-        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock, $updateDeviceAccessTimeUseCase);
+        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock, $updateDeviceAccessTimeUseCase, $eventDispatcher);
         
         // Execute the orchestrator method
         $result = $orchestrator->execute($deviceData);
@@ -108,8 +112,10 @@ class DeviceAccessOrchestratorTest extends TestCase
                                     $deviceData->getUserId() === $this->userId;
                          }))
                          ->once();
+        $eventDispatcher = Mockery::mock(\Illuminate\Contracts\Events\Dispatcher::class);
+        $eventDispatcher->shouldReceive('dispatch');
 
-        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock, $updateDeviceAccessTimeUseCase);
+        $orchestrator = new DeviceAccessOrchestrator($checkExistingDeviceMock, $checkDeviceLimitMock, $addNewDeviceMock, $updateDeviceAccessTimeUseCase, $eventDispatcher);
         
         // Execute the orchestrator method
         $result = $orchestrator->execute($deviceData);

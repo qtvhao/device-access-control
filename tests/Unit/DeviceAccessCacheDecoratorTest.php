@@ -30,9 +30,10 @@ class DeviceAccessCacheDecoratorTest extends TestCase
             ->andReturn(json_encode($cachedData));
 
         $repositoryMock = Mockery::mock(DeviceAccessRepositoryInterface::class);
+        $loggerMock = Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         // Instantiate the decorator with mocked dependencies
-        $decorator = new DeviceAccessCacheDecorator($repositoryMock, $redisMock);
+        $decorator = new DeviceAccessCacheDecorator($repositoryMock, $redisMock, $loggerMock);
 
         // Act: Execute the findByDeviceId method
         $result = $decorator->findByDeviceId($deviceId, $userId);
@@ -78,9 +79,10 @@ class DeviceAccessCacheDecoratorTest extends TestCase
                 deviceName: 'Mobile Device',
                 userId: $device->getUserId()
             ));
+        $loggerMock = Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         // Instantiate the decorator with mocked dependencies
-        $decorator = new DeviceAccessCacheDecorator($repositoryMock, $redisMock);
+        $decorator = new DeviceAccessCacheDecorator($repositoryMock, $redisMock, $loggerMock);
 
         // Act: Execute the findByDeviceId method
         $result = $decorator->findByDeviceId($device->getDeviceId(), $device->getUserId());
@@ -111,9 +113,10 @@ class DeviceAccessCacheDecoratorTest extends TestCase
 
         // Repository mock isn't needed here since we're only testing cache hits
         $repositoryMock = Mockery::mock(DeviceAccessRepositoryInterface::class);
+        $loggerMock = Mockery::mock(\Psr\Log\LoggerInterface::class);
 
         // Instantiate the decorator with the mocked Redis client
-        $decorator = new DeviceAccessCacheDecorator($repositoryMock, $redisMock);
+        $decorator = new DeviceAccessCacheDecorator($repositoryMock, $redisMock, $loggerMock);
 
         // Act: Execute findByDeviceId with different user IDs
         $resultUser1 = $decorator->findByDeviceId($deviceId, $user1Data['userId']);
